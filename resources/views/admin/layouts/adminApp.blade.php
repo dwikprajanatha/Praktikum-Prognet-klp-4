@@ -18,9 +18,7 @@
     <link href= {{ asset("adminAssets/vendors/nprogress/nprogress.css") }} rel="stylesheet">
     <!-- iCheck -->
     <link href= {{ asset("adminAssets/vendors/iCheck/skins/flat/green.css") }} rel="stylesheet">
-	
-    <!-- bootstrap-progressbar -->
-    <link href= {{ asset("adminAssets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css") }} rel="stylesheet">
+
     <!-- JQVMap -->
     <link href= {{ asset("adminAssets/vendors/jqvmap/dist/jqvmap.min.css") }} rel="stylesheet"/>
     <!-- bootstrap-daterangepicker -->
@@ -28,6 +26,10 @@
 
     <!-- Custom Theme Style -->
     <link href= {{ asset("adminAssets/build/css/custom.min.css") }} rel="stylesheet">
+
+    @yield('css')
+
+
   </head>
 
   <body class="nav-md">
@@ -60,26 +62,26 @@
               <div class="menu_section">
                 <h3>General</h3>
                 <ul class="nav side-menu">
-                  <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+                  <li><a href="{{route('admin.dashboard')}}"><i class="fa fa-home"></i> Home </span></a>
+                  </li>
+                  <li><a><i class="fa fa-edit"></i> Master Data <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="index.html">Dashboard</a></li>
-                      <li><a href="index2.html">Dashboard2</a></li>
-                      <li><a href="index3.html">Dashboard3</a></li>
+                      <li><a href="{{route('product.index')}}">Product</a></li>
+
+                      <li><a href="{{route('category.index')}}">Categories</a></li>
+
+                      <li><a href="{{route('courier.index')}}">Couriers</a></li>
+
+                      <li><a href="{{route('discount.index')}}">Discount</a></li>
+                      
+                      <li><a href="{{route('index.transaksi')}}">Transaction</a></li>
+
                     </ul>
                   </li>
-                  <li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
+
+                  <li><a><i class="fa fa-desktop"></i> bala <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="form.html">General Form</a></li>
-                      <li><a href="form_advanced.html">Advanced Components</a></li>
-                      <li><a href="form_validation.html">Form Validation</a></li>
-                      <li><a href="form_wizards.html">Form Wizard</a></li>
-                      <li><a href="form_upload.html">Form Upload</a></li>
-                      <li><a href="form_buttons.html">Form Buttons</a></li>
-                    </ul>
-                  </li>
-                  <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                      <li><a href="general_elements.html">General Elements</a></li>
+                      <li><a href="general_elements.html">User Review</a></li>
                       <li><a href="media_gallery.html">Media Gallery</a></li>
                       <li><a href="typography.html">Typography</a></li>
                       <li><a href="icons.html">Icons</a></li>
@@ -201,7 +203,18 @@
                       </a>
                     </li>
                     <li><a href="javascript:;">Help</a></li>
-                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                    <li>
+                    <!-- <a href="{{route('admin.logout')}}">Logout</a> -->
+                        <a
+                          onclick="event.preventDefault; document.getElementById('logout-form').submit();">
+                          Logout
+                        </a>
+
+                        <form id="logout-form" action= " {{ route('admin.logout') }} " method="POST" style="display: one;">
+                          {{ csrf_field() }}
+                        </form>
+                                                        
+                    </li>
                   </ul>
                 </li>
 
@@ -331,6 +344,8 @@
 
     <!-- Custom Theme Scripts -->
     <script src= {{ asset("adminAssets/build/js/custom.min.js") }}></script>
+
+    @stack('javascript')
 	
   </body>
 </html>
