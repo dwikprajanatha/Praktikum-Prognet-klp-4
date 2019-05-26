@@ -50,10 +50,7 @@
                             </div>
 
                             <div class="single-info">
-                            @if($data->status_transaksi == 'unverified')
-                                <span class="title">Status:</span>
-                                <span class="value">{{$data->status_transaksi}}</span>
-                            @elseif($data->status_transaksi == 'expired')
+                            @if($data->status_transaksi == 'expired')
                                 <span class="title">Status:</span>
                                 <span class="value">Expired</span>
                             @else
@@ -69,6 +66,7 @@
                             <label>Upload Photo Payment</label><br>
                             <input type="file" name="proof_of_payment" accept="image/*"> <br><br>
                             <input type="hidden" name="id_transaksi" value="{{$data->transaction_id}}">
+                            <input type="hidden" name="user_id" value="{{$data->user_id}}">
                             <input type="submit" value="upload">
                         </form>
                         @elseif($data->status_transaksi == 'expired')

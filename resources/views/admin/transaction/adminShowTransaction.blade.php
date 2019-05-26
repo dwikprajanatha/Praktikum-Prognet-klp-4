@@ -51,7 +51,7 @@
                     @foreach($data as $da)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$da->first_name}}</td>
+                            <td><a href="{{route('show.detail.transaksi',$da->id_transaction)}}">{{$da->first_name}}</a></td>
                             <td>{{$da->regency .', ' . $da->province}}</td>
                             <td>{{$da->courier}}</td>
                             <td>Rp.{{number_format($da->shipping_cost)}}</td>

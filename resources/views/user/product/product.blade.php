@@ -80,7 +80,7 @@
 
                                 <div class="single-slider-product__content  single-slider-product--list-view__content">
                                     <div class="single-slider-product--list-view__content__details">
-                                        <p class="product-title"><a href="#">{{$d->product_name}}</a></p>
+                                        <p class="product-title"><a href="{{route('detail.product',$d->product_id)}}">{{$d->product_name}}</a></p>
                                         <div class="rating">
                                             <i class="ion-android-star active"></i>
                                             <i class="ion-android-star active"></i>

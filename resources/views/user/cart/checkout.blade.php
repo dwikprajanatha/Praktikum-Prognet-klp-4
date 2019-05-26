@@ -88,7 +88,7 @@
 
                                             <p>Sub Total <span>Rp.{{number_format(session()->get('cart')->totalPrice)}}</span></p>
                                             
-                                            <p>Shipping Fee <span id="ship_cost">$00.00</span></p>
+                                            <p>Shipping Fee <span id="ship_cost">Rp.0</span></p>
                                             
                                             <h4>Grand Total <span>Rp.{{number_format(session()->get('cart')->totalPrice)}}</span></h4>
                                             

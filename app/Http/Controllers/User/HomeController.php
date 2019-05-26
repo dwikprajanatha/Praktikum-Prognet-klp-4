@@ -9,11 +9,14 @@ use Image;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use App\Notifications\AdminNotif;
 
 use DB;
 use App\Product;
 use App\Discount;
 use App\Transaction;
+use App\User;
+use App\Admin;
 
 class HomeController extends Controller
 {
@@ -57,7 +60,7 @@ class HomeController extends Controller
 
         foreach($data as $d){
 
-            $data_images[] = DB::table('products')
+            $data_images[] = DB::table('products')->select('products.id as id_product','products.*','product_images.*')
                     ->join('product_images','products.id','=','product_images.product_id')
                     ->where('product_images.product_id',$d->id)->first();
 
@@ -99,6 +102,30 @@ class HomeController extends Controller
         
     }
 
+     /**
+     * Melihat seluruh Review
+     */
+    public function productDetail($id)
+    {   
+ 
+        $products = Product::find($id);
+        
+        $review = DB::table('product_reviews')->select('users.id as id_user','users.*','product_reviews.*')
+                    ->join('users','product_reviews.user_id','=','users.id')
+                    ->where('product_id',$id)->get();
+
+    $id_review = [];
+        foreach ($review as $r) {
+            
+            array_push($id_review,$r->id);
+            
+        }
+
+        $response = DB::table('response')->whereIn('review_id',$id_review)->get();
+
+        return view('user.review.review_product')->with(['reviews' => $review, 'products' => $products, 'response' => $response]);
+    }
+
     /**
      * Show Order List and Track Order
      */
@@ -106,13 +133,14 @@ class HomeController extends Controller
     {
 
         $transaksi = Transaction::where('user_id',Auth::id())->get();
-
+        $id = Auth::id();
         $list = [];
         foreach($transaksi as $trans){
             
             $data = DB::table('transaction_details')
                 ->join('products','transaction_details.product_id','=','products.id')
                 ->join('transactions','transaction_details.transaction_id','=','transactions.id')
+                ->where('transactions.user_id',$id)
                 ->get();
 
             array_push($list,$data);
@@ -135,6 +163,8 @@ class HomeController extends Controller
     {
         DB::table('transaction_details')->where('id_transaction_details',$id)->update(['status_barang' => 'Canceled']);
         return redirect()->back();
+
+
     }
 
     /**
@@ -160,6 +190,8 @@ class HomeController extends Controller
      */
     public function UploadBukit(Request $request)
     {
+
+
         // dd($request->id_transaksi);
         if($request->hasFile('proof_of_payment')){
 
@@ -174,7 +206,14 @@ class HomeController extends Controller
             $proof->status_transaksi = 'verified';
             $proof->proof_of_payment = $name;
             $proof->save();
+
         }
+
+        $user = Admin::find(1);
+        
+        $action = Route('show.detail.transaksi',$proof->id);
+        $message = "<a href=$action>Ada upload bukti transaksi baru!</a>";
+        $user->notify(new AdminNotif($message));
 
         return redirect()->back();
     }
@@ -196,14 +235,31 @@ class HomeController extends Controller
      */
     public function postReview(Request $request)
     {
+       
         DB::table('product_reviews')->insert([
             'product_id' => $request->product_id,
             'user_id' => Auth::id(),
             'rate' => $request->rate,
             'content' => $request->review,
         ]);
+        
+        $produk = Product::find($request->product_id);
+        $admin = Admin::find(1);
+        $message = "Ada Review untuk " . $produk->product_name . '!';
+        
+        $admin->notify(new AdminNotif($message));
 
         return redirect()->route('show.order');
+    }
+
+
+    /**
+     * Mark as read notif
+     */
+    public function markRead(){
+        $user = User::find(Auth::id());
+        $user->unreadNotifications()->update(['read_at' => now()]);
+        return response()->json($user);
     }
 
 

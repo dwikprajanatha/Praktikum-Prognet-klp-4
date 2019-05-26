@@ -3,7 +3,9 @@
 @section('content')
 
                         <div class="cart-table table-responsive">
+                        @if(!$barang[0]->isEmpty())
                             <table class="table">
+                               
                                 <thead>
                                     <tr>
                                         <th class="pro-thumbnail">Image</th>
@@ -11,6 +13,7 @@
                                         <th class="pro-price">Price (pcs)</th>
                                         <th class="pro-quantity">Quantity</th>
                                         <th class="pro-subtotal">Total</th>
+                                        <th class="pro-subtotal">Status Payment</th>
                                         <th class="pro-subtotal">Action</th>
                                     </tr>
                                 </thead>
@@ -22,6 +25,7 @@
                                         <td class="pro-price"><span>Rp.{{number_format($bar->price)}}</span></td>
                                         <td class="pro-quantity">{{$bar->qty}}</td> 
                                         <td class="pro-subtotal"><span>{{number_format($bar->total)}}</span></td>
+                                        <td class="pro-subtotal"><span>{{$bar->status_transaksi}}</span></td>
                                         @if($bar->status_barang == 'Canceled')
                                         <td class="pro-quantity"><button class="btn btn-error">Canceled</button></td>
                                         @else
@@ -32,6 +36,12 @@
                                 @endforeach
                                 </tbody>
                             </table>
+
+                            @else
+
+                            <center><h2>No Transaction Made</h2></center> <br><br>
+
+                            @endif
                         </div>
 
 

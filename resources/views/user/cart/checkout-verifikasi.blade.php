@@ -102,7 +102,7 @@
                                             
                                             <input type="hidden" id="sub_total" name="sub_total" value="{{session()->get('cart')->totalPrice}}">
                                             
-                                            <p>Shipping Fee <span id="ship_cost"></span></p>
+                                            <p>Shipping Fee <span id="ship_cost">Rp.0</span></p>
 
                                             <input type="hidden" name="ship_cost" id="ongkir" value="">
                                             

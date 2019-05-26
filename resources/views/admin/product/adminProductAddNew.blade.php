@@ -1,5 +1,12 @@
 @extends('admin.layouts.Adminapp')
 
+@section('css')
+
+    <!-- bootstrap-datetimepicker -->
+    <link href="{{asset('adminAssets/vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css')}}" rel="stylesheet">
+
+@endsection
+
 @section('content')
 
 
@@ -202,3 +209,15 @@
 </div>
 
 @endsection
+
+@push('javascript')
+
+
+    <!-- bootstrap-daterangepicker -->
+    <script src="{{ asset('adminAssets/vendors/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('adminAssets/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <!-- bootstrap-datetimepicker -->    
+    <script src="{{ asset('adminAssets/vendors/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+
+
+@endpush

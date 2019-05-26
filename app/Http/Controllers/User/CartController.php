@@ -9,6 +9,7 @@ use Validator;
 use Carbon\Carbon;
 use Auth;
 use DB;
+use App\Notifications\AdminNotif;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
@@ -18,6 +19,9 @@ use App\ShopCart;
 use App\Courier;
 use App\Transaction;
 use App\Cart;
+use App\Admin;
+
+use App\Notifications\UserNotif;
 
 
 class CartController extends Controller
@@ -177,10 +181,12 @@ class CartController extends Controller
         $id_kurir = Courier::select('id')->where('kode',$request->courier)->first();
 
         $cart = Session::get('cart');
+        
+        $transaction = new Transaction;
 
-        DB::transaction(function() use($request, $id_kurir){
+        DB::transaction(function() use($request, $id_kurir, $transaction){
 
-            $transaction = new Transaction;
+            
             $transaction->timeout = Carbon::tomorrow();
             $transaction->address = $request->address;
             $transaction->regency = $request->kabupaten;
@@ -191,7 +197,7 @@ class CartController extends Controller
             $transaction->user_id = Auth::id();
             $transaction->courier_id = $id_kurir->id;
             $transaction->proof_of_payment = "No Data";
-            $transaction->status = "unverified";
+            $transaction->status_transaksi = "unverified";
             $transaction->save();
 
             $carts = Session::get('cart');
@@ -209,12 +215,18 @@ class CartController extends Controller
                     'qty' => $item['qty'],
                     'discount' => 0,
                     'selling_price' => $item['item']->price,
-                    'status_barang' => 'Packing',
+                    'status_barang' => 'Waiting Verification',
                 ]);
             }
-
+            
 
         });
+
+        $admin = Admin::find(1);
+        
+        $action = Route('show.detail.transaksi',$transaction->id);
+        $message = "<a href=$action>Ada Transaksi Baru!</a>";
+        $admin->notify(new AdminNotif($message));
 
         return redirect()->route('destroy.cart');
     }
@@ -227,5 +239,6 @@ class CartController extends Controller
         session()->forget('cart');
         return redirect()->route('home');
     }
+
 
 }

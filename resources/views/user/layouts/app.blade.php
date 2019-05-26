@@ -15,9 +15,9 @@
     =============================================-->
     
     <!-- Vendor CSS -->
-    <link href= {{ asset("assets/css/vendors.css")}} rel="stylesheet">
+    <link href= "{{ asset('assets/css/vendors.css')}}" rel="stylesheet">
 	<!-- Main CSS -->
-	<link href= {{ asset("assets/css/style.css")}} rel="stylesheet">
+	<link href= "{{ asset('assets/css/style.css')}}" rel="stylesheet">
 
     @yield('css')
 
@@ -100,24 +100,57 @@
                                                 </ul>
                                                 @endif
                                                 </div>
-                                                
+
+                                                @if(Auth::id())
+
+                                                @php
+                                                    $jum = auth()->user()->unreadNotifications->count();
+                                                @endphp
                                                 <!--=======  End of dropdown menu items  =======-->
                                             </div>
                                             <span class="separator">|</span>
                                             <div class="header-top-single-dropdown">
-                                                <a href="javascript:void(0)" class="active-dropdown-trigger" id="currency-options">USD <i class="ion-ios-arrow-down"></i></a>
+                                                <a href="#" class="active-dropdown-trigger" id="currency-options">Notification <span class="badge badge-light">{{$jum}}</span><i class="ion-ios-arrow-down"></i></a>
                                                 <!--=======  dropdown menu items  =======-->
                                                 
-                                                <div class="header-top-single-dropdown__dropdown-menu-items deactive-dropdown-menu">
+                                                <div class="header-top-single-dropdown__dropdown-menu-items deactive-dropdown-menu extra-small-mobile-fix">
                                                     <ul>
-                                                        <li><a href="#">€ EURO</a></li>
-                                                        <li><a href="#">£ Pound Sterling</a></li>
-                                                        <li><a href="#">$ US Dollar</a></li>
+                                                    @foreach ( Auth::user()->unreadNotifications as $notification)
+                                                    
+                                                        <li><!-- start message -->
+                                                            <a href="#">
+                                                                <!-- Message title and timestamp -->
+                                                                    <!-- The message -->
+                                                                   
+                                                                <p>{!! $notification->data !!} </p>
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                    <li><a id="markRead">Marks as Read</a></li>
                                                     </ul>
                                                 </div>
                                                 
                                                 <!--=======  End of dropdown menu items  =======-->
                                             </div>
+
+                                                @else
+
+                                            </div>
+                                            <span class="separator">|</span>
+                                            <div class="header-top-single-dropdown">
+                                                <a class="active-dropdown-trigger" id="currency-options">Notification</span><i class="ion-ios-arrow-down"></i></a>
+                                                <!--=======  dropdown menu items  =======-->
+                                                
+                                                <div class="header-top-single-dropdown__dropdown-menu-items deactive-dropdown-menu">
+                                                    <ul>
+                                                        <li>No Notification</li>
+                                                    </ul>
+                                                </div>
+                                                
+                                                <!--=======  End of dropdown menu items  =======-->
+                                            </div>
+
+                                            @endif
                                         </div>
                                         
                                         <!--=======  End of header top dropdown container  =======-->
@@ -232,7 +265,7 @@
                                                 
 
                                             
-    
+                                                
                                                 <div class="cart-calculation-table">
                                                     <table class="table mb-25">
                                                         <tbody>
@@ -241,21 +274,20 @@
                                                                 <td class="text-right">Rp.{{Session::has('cart') ? number_format(Session::get('cart')->totalPrice) : 0}}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td class="text-left">Diskon :</td>
-                                                                <td class="text-right">$4.00</td>
-                                                            </tr>
-                                                            <tr>
                                                                 <td class="text-left">Total :</td>
 
                                                                 <td class="text-right">Rp.{{ Session::has('cart') ? number_format(Session::get('cart')->totalPrice) : 0}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
-    
+                                                    
+                                                    @if(session()->has('cart'))
                                                     <div class="cart-buttons">
-                                                        <a href="index.php?page=cart" class="theme-button">View Cart</a>
+                                                        <a href="#" class="theme-button">View Cart</a>
                                                         <a href="{{route('checkout')}}" class="theme-button">Checkout</a>
                                                     </div>
+
+                                                    @endif
                                                 </div>
     
                                             </div>
@@ -290,22 +322,22 @@
                                             <ul class="mega-menu four-column">
                                                 <li><a>Tanaman Hias</a>
                                                     <ul>
-                                                        <li><a href="#">Tanaman Hias Bunga</a></li>
-                                                        <li><a href="#">Tanaman Hias Daun</a></li>
+                                                        <li><a href="{{route('product')}}">Tanaman Hias Bunga</a></li>
+                                                        <li><a href="{{route('product')}}">Tanaman Hias Daun</a></li>
                                                     </ul>
                                                 </li>
 
                                                 <li><a>Lokasi Tanam</a>
                                                     <ul>
-                                                        <li><a href="#">Tanaman Indoor</a></li>
-                                                        <li><a href="#">Tanaman Outdoor</a></li>       
+                                                        <li><a href="{{route('product')}}">Tanaman Indoor</a></li>
+                                                        <li><a href="{{route('product')}}">Tanaman Outdoor</a></li>       
                                                     </ul>
                                                 </li>
 
                                                 <li><a>Media Tanam</a>
                                                     <ul>
-                                                        <li><a href="#">Tanaman Pot</a></li>
-                                                        <li><a href="#">Tanaman Aquaphonic</a></li>       
+                                                        <li><a href="{{route('product')}}">Tanaman Pot</a></li>
+                                                        <li><a href="{{route('product')}}">Tanaman Aquaphonic</a></li>       
                                                     </ul>
                                                 </li>
 
@@ -322,14 +354,14 @@
                                             <ul class="sub-menu">
                                                 <li class="menu-item-has-children"><a>Purchase</a>
                                                     <ul class="sub-menu">
-                                                        <li><a href="#">Your Order</a></li>
+                                                        <li><a href="{{route('show.order')}}">Your Order</a></li>
                                                         <li><a href="#">Whislist</a></li>
                                                     </ul>
                                                 </li>
                                                 <li class="menu-item-has-children"><a>Account</a>
                                                     <ul class="sub-menu">
                                                         <li><a href="{{route('profile')}}">My Account</a></li>
-                                                        <li><a href="index.php?page=login">Login Register</a></li>
+                                                        <li><a href="{{route('user.login')}}">Login Register</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -612,7 +644,36 @@
     
     @stack('javascript')
 
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $('#markRead').click(function(){
+            console.log("terklik");
+            $.ajax({
+                  url: '/markRead',  
+                  type : 'post',
+                  dataType: 'JSON',
+                  data: {
+                    "_token": "{{ csrf_token() }}",
+                    
+                    },
+                  success:function(response){
+                        location.reload();
+                  },
+                  error:function(err){
+                    console.log(err)
+                    alert("GAGAL");
+                  }
+              });
+        });
+    });
     
+    
+    </script>
 
     <!--=====  End of JS files ======-->
 

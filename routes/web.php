@@ -49,6 +49,10 @@ Route::get('home', 'User\HomeController@index')->name('home');
 Route::get('profile','User\HomeController@profile')->name('profile')->middleware('auth');
 Route::get('product', 'User\HomeController@product')->name('product');
 
+/**
+ * Detail Product
+ */
+Route::get('product/detail/{id}','User\HomeController@productDetail')->name('detail.product');
 
 /**
  * Cart Routes
@@ -71,7 +75,7 @@ Route::post('transaction-proggress', 'User\CartController@prosesBeli')->name('tr
 
 
 /**
- * Product List
+ * Transaction order List
  */
 Route::get('order-list','User\HomeController@showOrder')->name('show.order');
 Route::get('transaction-cancel/{id}','User\HomeController@cancelOrder')->name('cancel.order');
@@ -98,9 +102,7 @@ Route::get('flush',function(){
     return redirect()->route('home');
 })->name('session.flush');
 
-
-
-
+Route::post('markRead','User\HomeController@markRead');
 
 
 
@@ -125,5 +127,27 @@ Route::prefix('admin')->group(function () {
      * Transakasi Route
      */
     Route::get('transaksi','Admin\AllController@showTransaction')->name('index.transaksi');
+    Route::get('transaksi/show/{id}','Admin\AllController@DetailTransaction')->name('show.detail.transaksi');
+    Route::post('transaksi/update','Admin\AllController@updateDetailTransaction')->name('update.detail');
+
+
+    /**
+     * Review
+     */
+    Route::get('reviews','Admin\AllController@showReview')->name('show.reviews');
+    Route::get('reviews/balas/{id}','Admin\AllController@balasReview')->name('balas.reviews');
+    Route::post('reviews/balas','Admin\AllController@postResponse')->name('post.response');
+
+
+    /**
+     * Report
+     */
+
+    Route::get('/monthly_chart','Admin\AdminDashboardController@monthly_chart')->name('monthly.chart');
+    Route::get('/yearly_chart','Admin\AdminDashboardController@yearly_chart')->name('yearly.chart');
+    Route::get('/daily_chart','Admin\AdminDashboardController@daily_chart')->name('daily.chart');
+
+
+    Route::post('/markReadAdmin','Admin\AdminDashboardController@markReadAdmin')->name('admin.read.notif');
 
 });
