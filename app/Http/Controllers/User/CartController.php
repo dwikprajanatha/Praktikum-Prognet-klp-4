@@ -28,7 +28,11 @@ class CartController extends Controller
 {
     public function add(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = DB::table('product_images')
+                    ->join('products','product_images.product_id','=','products.id')
+                    ->where('products.id',$id)->first();
+        
+
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
 
 
@@ -48,6 +52,25 @@ class CartController extends Controller
 
         return redirect()->back();
 
+    }
+
+    /**
+     * Cart View
+     */
+    public function cartView()
+    {
+        return view('user.cart.view_cart');
+    }
+
+    /**
+     * Remove item from cart
+     */
+    public function removeItem($id)
+    {
+        $cart = Session()->get('cart');
+        $delete = Session()->forget('cart->items',$id);
+        $cart_baru = Session()->get('cart');
+        dd($cart_baru);
     }
 
     public function checkout()
@@ -88,7 +111,6 @@ class CartController extends Controller
      */
     public function checkOngkir(Request $request)
     {
-
         $validator = Validator::make($request->all(),[
             'address' => 'required|string|max:255',
             'kabupaten' => 'required',
@@ -96,7 +118,8 @@ class CartController extends Controller
         ]);
 
         if($validator->fails()){
-            return redirect()->back()->withError($validator);
+
+            return redirect()->back()->withErrors($validator);
         }
         
         $client = new Client();
@@ -237,7 +260,7 @@ class CartController extends Controller
     public function destroy()
     {
         session()->forget('cart');
-        return redirect()->route('home');
+        return redirect()->route('home')->with('order-success','order sukses');
     }
 
 

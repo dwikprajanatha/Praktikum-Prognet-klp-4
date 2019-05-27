@@ -8,6 +8,24 @@
 
 @section('content')
 
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li><center><b>{{ $error }}</b></center></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if(session()->has('error'))
+                    <div class="alert alert-danger">
+                    <ul>
+                       <li><b><center>{{session()->get('error')}}</center></b></li> 
+                    </ul>
+                    </div>
+                @endif
+
 <div class="page-section pb-40">
         <div class="container">
             <div class="row">

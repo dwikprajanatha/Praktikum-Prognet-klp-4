@@ -5,6 +5,14 @@
 
     <!--====================  split banner area ====================-->
     
+    @if(session()->has('order-success'))
+                <div class="alert alert-success">
+                <ul>
+                    <li><b><center>Pesanan anda berhasil ditambahkan</center></b></li> 
+                </ul>
+                </div>
+            @endif
+
     <div class="split-banner-area mb-40 mb-sm-30">
         <div class="container">
             <div class="row row-5">

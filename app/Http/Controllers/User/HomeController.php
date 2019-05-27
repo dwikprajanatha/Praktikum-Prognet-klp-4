@@ -17,6 +17,7 @@ use App\Discount;
 use App\Transaction;
 use App\User;
 use App\Admin;
+use App\ProductCategory;
 
 class HomeController extends Controller
 {
@@ -52,42 +53,51 @@ class HomeController extends Controller
     /**
      * Show Products
      */
-    public function product()
+    public function product($label)
     {
+        
+        $category = ProductCategory::select('id')->where('category_name', $label)->first();
 
-        $data = Product::where('status',1)->get();
-
-
-        foreach($data as $d){
-
-            $data_images[] = DB::table('products')->select('products.id as id_product','products.*','product_images.*')
+            $data_images = DB::table('products')->select('products.id as id_product','products.*','product_images.*')
                     ->join('product_images','products.id','=','product_images.product_id')
-                    ->where('product_images.product_id',$d->id)->first();
+                    ->join('product_category_details','product_category_details.product_id','=','products.id')
+                    ->where('product_category_details.category_id',$category->id)->get();
+
+            // dd($data_images);
 
             $discount = Discount::where([
                 ['start','<=',date('Y-m-d',time())],
                 ['end','>=',date('Y-m-d',time())],
             ])->get();
-            
-            
+
+            $discount_price = [];
             if(isset($discount)){
+
+                foreach($data_images as $d){
 
                     foreach($discount as $disc){
 
-                        if($d->id == $disc->product_id){
+                        if($d->id_product == $disc->product_id){
                             $potongan = $d->price * $disc->percentage / 100;
                             $disc_price = $d->price - $potongan;
-                            $discount_price[] = ['product_id' => $d->id, 'discount_price' => $disc_price];
+                            array_push($discount_price,['product_id' => $d->id_product, 'discount_price' => $disc_price]);
                         }
 
                     }
+
+
+                    
+                }
+
+
             
             
 
             }
             
             // $images[] = ['product_id' => $d->product_id, 'image' => $data_images->image_location];
-        }
+        
+
 
         if($discount->isEmpty()){
                
@@ -108,7 +118,13 @@ class HomeController extends Controller
     public function productDetail($id)
     {   
  
-        $products = Product::find($id);
+        // $products = Product::find($id);
+
+        $products = DB::table('product_images')->select('products.*','product_images.image_name')
+                    ->join('products','product_images.product_id','=','products.id')
+                    ->where('products.id',$id)
+                    ->first();
+        
         
         $review = DB::table('product_reviews')->select('users.id as id_user','users.*','product_reviews.*')
                     ->join('users','product_reviews.user_id','=','users.id')
@@ -132,26 +148,38 @@ class HomeController extends Controller
     public function showOrder()
     {
 
-        $transaksi = Transaction::where('user_id',Auth::id())->get();
+        // $transaksi = Transaction::where('user_id',Auth::id())->get();
         $id = Auth::id();
         $list = [];
-        foreach($transaksi as $trans){
+
+
+        // foreach($transaksi as $trans){
             
-            $data = DB::table('transaction_details')
-                ->join('products','transaction_details.product_id','=','products.id')
-                ->join('transactions','transaction_details.transaction_id','=','transactions.id')
-                ->where('transactions.user_id',$id)
-                ->get();
+        //     $data = DB::table('transaction_details')
+        //         ->join('products','transaction_details.product_id','=','products.id')
+        //         ->join('product_images','products.id','=','product_images.product_id')
+        //         ->join('transactions','transaction_details.transaction_id','=','transactions.id')
+        //         ->where('transactions.user_id',$id)
+        //         ->get();
 
-            array_push($list,$data);
 
-        }
 
-        
-        
+
+        //     array_push($list,$data);
+
+        // }
+
+
+        $data = DB::table('transaction_details')->select('products.created_at as date','products.*','transactions.*','transaction_details.*')
+        ->join('products','transaction_details.product_id','=','products.id')
+        ->join('transactions','transaction_details.transaction_id','=','transactions.id')
+        ->groupBy('transactions.id')
+        ->where('transactions.user_id',$id)
+        ->get();
+
         return view('user.transaction.transaction_list')->with([
-            'list_transaksi' => $transaksi,
-            'barang' => $list,
+            'list_transaksi' => $data,
+            // 'barang' => $list,
             ]);
 
     }
@@ -161,10 +189,8 @@ class HomeController extends Controller
      */
     public function cancelOrder($id)
     {
-        DB::table('transaction_details')->where('id_transaction_details',$id)->update(['status_barang' => 'Canceled']);
+        DB::table('transactions')->where('id',$id)->update(['status_transaksi' => 'canceled']);
         return redirect()->back();
-
-
     }
 
     /**
@@ -176,14 +202,27 @@ class HomeController extends Controller
         $data = DB::table('transaction_details')
                     ->join('transactions','transaction_details.transaction_id','=','transactions.id')
                     ->join('products','transaction_details.product_id','=','products.id')
-                    ->where('transaction_details.id_transaction_details',$id)->get();
+                    ->join('product_images','products.id','=','product_images.product_id')
+                    ->where('transactions.id',$id)->get();
 
-        foreach($data as $d){
-            $da = $d;
-        }
+        // foreach($data as $d){
+        //     $da = $d;
+        // }
 
-        return view('user.transaction.transaction_detail')->with('data',$da);
+
+        return view('user.transaction.transaction_list_detail')->with('data',$data);
     }
+
+
+    /**
+     * Remove Items from a transactions
+     */
+    public function removeItems($id)
+    {
+        DB::table('transaction_details')->where('id_transaction_details',$id)->update(['status_barang' => 'Canceled']);
+        return redirect()->back();
+    }
+
 
     /**
      * Upload bukti pembayaran
@@ -215,7 +254,7 @@ class HomeController extends Controller
         $message = "<a href=$action>Ada upload bukti transaksi baru!</a>";
         $user->notify(new AdminNotif($message));
 
-        return redirect()->back();
+        return redirect()->back()->with('success','ada');
     }
 
 
@@ -225,7 +264,9 @@ class HomeController extends Controller
      */
     public function reviewForm($id)
     {  
-        $data = Product::find($id);
+        $data = DB::table('product_images')
+                ->join('products','product_images.product_id','products.id')
+                ->where('products.id',$id)->first();
 
         return view('user.review.review')->with('data',$data);
     }

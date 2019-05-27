@@ -2,23 +2,23 @@
 
 @section('content')
 
-                @if (count($errors) > 0)
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li><center><b>{{ $error }}</b></center></li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                @if(session()->has('error'))
-                    <div class="alert alert-danger">
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
                     <ul>
-                       <li><b><center>{{session()->get('error')}}</center></b></li> 
+                        @foreach ($errors->all() as $error)
+                        <li><center><b>{{ $error }}</b></center></li>
+                        @endforeach
                     </ul>
-                    </div>
-                @endif
+                </div>
+            @endif
+
+            @if(session()->has('error'))
+                <div class="alert alert-danger">
+                <ul>
+                    <li><b><center>{{session()->get('error')}}</center></b></li> 
+                </ul>
+                </div>
+            @endif
     <!--==================== page content ====================-->
 
     <div class="page-section pb-40">
@@ -37,7 +37,8 @@
                             <div class="row">
                                 <div class="col-md-12 col-12 mb-20">
                                     <label>Email Address*</label>
-                                    <input class="mb-0" type="email" name="email" placeholder="Email Address">
+                                    <input class="mb-0" type="email" name="email" value="{{old('email')}}" placeholder="Email Address">
+                                    
                                 </div>
                                 
                                 <div class="col-12 mb-20">

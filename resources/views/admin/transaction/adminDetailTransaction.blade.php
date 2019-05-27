@@ -6,7 +6,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Form Elements</h3>
+                <h3>Detail Transaction</h3>
             </div>
             <input type="hidden" name="user_id" value="{{$data->user_id}}">
             <div class="title_right">
@@ -25,7 +25,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Form Design <small>different form elements</small></h2>
+                        <h2>Detail Transaction<small>more detail is good</small></h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>

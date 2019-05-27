@@ -47,7 +47,7 @@ Route::post('user/resetpassword/form','User\Auth\AuthController@resetPassword')-
  */
 Route::get('home', 'User\HomeController@index')->name('home');
 Route::get('profile','User\HomeController@profile')->name('profile')->middleware('auth');
-Route::get('product', 'User\HomeController@product')->name('product');
+Route::get('product/{label}', 'User\HomeController@product')->name('product');
 
 /**
  * Detail Product
@@ -60,6 +60,8 @@ Route::get('product/detail/{id}','User\HomeController@productDetail')->name('det
 Route::get('cart/add/{id}', 'User\CartController@add')->name('add.to.cart');
 Route::get('check-out','User\CartController@checkout')->name('checkout')->middleware(['auth', 'custom-verified']);
 Route::get('cart-reset','User\CartController@destroy')->name('destroy.cart');
+Route::get('cart/view','User\CartController@cartView')->name('cart.view');
+Route::get('cart-remove/item/{id}','User\CartController@removeItem')->name('remove.from.cart');
 
 
 /**
@@ -81,6 +83,11 @@ Route::get('order-list','User\HomeController@showOrder')->name('show.order');
 Route::get('transaction-cancel/{id}','User\HomeController@cancelOrder')->name('cancel.order');
 Route::get('transaction-detail/{id}','User\HomeController@transactionDetail')->name('detail.order');
 
+
+/**
+ * Remove from transaction
+ */
+Route::get('remove-item/{id}','User\HomeController@removeItems')->name('remove.items');
 
 /**
  * Upload Bukti Pembayaran

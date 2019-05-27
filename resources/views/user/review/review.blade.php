@@ -14,7 +14,7 @@
                             <!--=======  big image slider single item  =======-->
                                         
                             <div class="big-image-slider-single-item">
-                                <img src="{{asset('assets/img/products/big1-1.jpg')}}" class="img-fluid" alt="">
+                                <img src="{{asset('images/'.$data->image_name)}}" class="img-fluid" alt="">
                             </div>
                             
                             <!--=======  End of big image slider single item  =======-->
@@ -44,7 +44,7 @@
                     @csrf
                         <h3 class="product-details-title mb-15">Give us Review</h3>
 
-                        <textarea name="review" cols="60" rows="10">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, explicabo. Praesentium blanditiis esse dolorem ex pariatur accusamus velit, natus asperiores, voluptatibus repudiandae vitae dolor vel modi placeat unde neque cumque!</textarea>
+                        <textarea name="review" cols="60" rows="10" placeholder="Review Us"></textarea>
                         <br>
 
                         <input type="hidden" name="product_id" value="{{$data->id}}">

@@ -1,4 +1,4 @@
-@extends('admin.layouts.Adminapp')
+@extends('admin.layouts.adminApp')
 
 @section('content')
 
@@ -8,7 +8,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Form Elements</h3>
+                <h3>Edit Product</h3>
             </div>
 
         </div>
@@ -18,7 +18,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Form Design <small>different form elements</small></h2>
+                        <h2>Edit Product <small>Make your Products Special</small></h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -83,25 +83,27 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                         <p style="padding: 5px;">
 
-                                        @php $i = 0 @endphp
                                         
-                                        
-                                        @foreach($categories as $category)
-                                        
-                                            @if($category->id == $category_id[$i]->category_id )                                            
-                                            
-                                            <input type="checkbox" name="categories[]" value="{{$category->category_name}}" class="flat" checked /> {{$category->category_name}}
-                                            
-                                            @php $i++ @endphp
+                                        @foreach($categories as $cat)
 
+                                            @if(in_array($cat->id,$category_id))
+
+                                                <input type="checkbox" name="categories[]" value="{{$cat->category_name}}" class="flat" checked /> {{$cat->category_name}}
                                             @else
-                                            
-                                            <input type="checkbox" name="categories[]" value="{{$category->category_name}}" class="flat" /> {{$category->category_name}}
-                                           
+
+                                            <input type="checkbox" name="categories[]" value="{{$cat->category_name}}" class="flat" /> {{$cat->category_name}}
+
                                             @endif
 
 
+
                                         @endforeach
+                                         
+                                            
+                                                
+                                            
+                                      
+          
                                         <p>
                                 </div>
 

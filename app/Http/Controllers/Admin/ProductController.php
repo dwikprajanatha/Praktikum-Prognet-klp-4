@@ -64,11 +64,13 @@ class ProductController extends Controller
             'stock' => 'required',
             'weight' => 'required',
             'categories' => 'required:',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'rate' => 'required',
             'price' => 'required',
 
         ]);
+
+        
         
         //get id product_category
         foreach ($request->categories as $category) {
@@ -193,7 +195,15 @@ class ProductController extends Controller
         ->join('product_categories','category_id','=','product_categories.id')
         ->select('category_id')->where('product_id',$id)->get();
 
-        return view('admin.product.adminProductEdit')->with(['product' => $dataProduct, 'categories' => $categories, 'category_id' => $category_id]);
+        $cat_id = [];
+        foreach($category_id as $cat){
+
+            array_push($cat_id,$cat->category_id);
+
+        }
+
+
+        return view('admin.product.adminProductEdit')->with(['product' => $dataProduct, 'categories' => $categories, 'category_id' => $cat_id]);
     }
 
     /**
@@ -211,7 +221,7 @@ class ProductController extends Controller
             'name' => 'required|string',
             'stock' => 'required',
             'weight' => 'required',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'rate' => 'required',
             'price' => 'required',
 

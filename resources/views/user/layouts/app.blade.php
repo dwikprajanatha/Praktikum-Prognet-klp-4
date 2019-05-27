@@ -209,6 +209,15 @@
                                         
                                         <!--=======  End of customer support text  =======-->
                                     </div>
+
+                                    
+                                    @php 
+                                            if(Session::has('cart')){
+                                                $carts = Session::get('cart')->items;
+                                            } else {
+                                                $carts = null;
+                                            }                                           
+                                            @endphp
     
                                     <div class="col-6 col-xl-1 col-lg-2 text-right order-2 order-sm-3 order-lg-4 order-xs-2 col-md-2 col-sm-2">
                                         <!--=======  cart icon  =======-->
@@ -223,14 +232,6 @@
                                             
                                             <div class="small-cart deactive-dropdown-menu">
 
-                                            @php 
-                                            if(Session::has('cart')){
-                                                $carts = Session::get('cart')->items;
-                                            } else {
-                                                $carts = null;
-                                            }                                           
-                                            @endphp
-                                            
                                             
                                                 <div class="small-cart-item-wrapper">
                                                     <!--======= Cart Item =======-->
@@ -239,11 +240,11 @@
                                                     <div class="single-item">  
                                                         <div class="image">
                                                             <a href="single-product.html">
-                                                                <img src="assets/img/cart-image/small2-90x90.jpg" class="img-fluid" alt="">
+                                                                <img src="{{asset('images/'.$cart['item']->image_name)}}" class="img-fluid" alt="">
                                                             </a>
                                                         </div>
                                                         <div class="content">
-                                                            <p class="cart-name"><a href="single-product.html">{{$cart['item']->product_name}}</a></p>
+                                                            <p class="cart-name"><a href="#">{{$cart['item']->product_name}}</a></p>
                                                             <p class="cart-quantity"><span class="quantity-mes">{{$cart['qty']}} Pcs X </span>Rp.{{number_format($cart['item']->price)}}</p>
                                                         </div> 
                                                     </div>
@@ -283,7 +284,7 @@
                                                     
                                                     @if(session()->has('cart'))
                                                     <div class="cart-buttons">
-                                                        <a href="#" class="theme-button">View Cart</a>
+                                                        <a href="{{route('cart.view')}}" class="theme-button">View Cart</a>
                                                         <a href="{{route('checkout')}}" class="theme-button">Checkout</a>
                                                     </div>
 
@@ -322,22 +323,15 @@
                                             <ul class="mega-menu four-column">
                                                 <li><a>Tanaman Hias</a>
                                                     <ul>
-                                                        <li><a href="{{route('product')}}">Tanaman Hias Bunga</a></li>
-                                                        <li><a href="{{route('product')}}">Tanaman Hias Daun</a></li>
+                                                        <li><a href="{{route('product','flower')}}">Tanaman Hias Bunga</a></li>
+                                                        <li><a href="{{route('product','bonsai')}}">Tanaman Hias Bonsai</a></li>
                                                     </ul>
                                                 </li>
 
                                                 <li><a>Lokasi Tanam</a>
                                                     <ul>
-                                                        <li><a href="{{route('product')}}">Tanaman Indoor</a></li>
-                                                        <li><a href="{{route('product')}}">Tanaman Outdoor</a></li>       
-                                                    </ul>
-                                                </li>
-
-                                                <li><a>Media Tanam</a>
-                                                    <ul>
-                                                        <li><a href="{{route('product')}}">Tanaman Pot</a></li>
-                                                        <li><a href="{{route('product')}}">Tanaman Aquaphonic</a></li>       
+                                                        <li><a href="{{route('product','inside plants')}}">Tanaman Indoor</a></li>
+                                                        <li><a href="{{route('product','outside plants')}}">Tanaman Outdoor</a></li>       
                                                     </ul>
                                                 </li>
 
@@ -355,7 +349,6 @@
                                                 <li class="menu-item-has-children"><a>Purchase</a>
                                                     <ul class="sub-menu">
                                                         <li><a href="{{route('show.order')}}">Your Order</a></li>
-                                                        <li><a href="#">Whislist</a></li>
                                                     </ul>
                                                 </li>
                                                 <li class="menu-item-has-children"><a>Account</a>
@@ -408,8 +401,10 @@
             </div>
         </div>
     </div>
+
     
     <!--====================  End of breadcrumb area  ====================-->
+
 
         @yield('content')
 

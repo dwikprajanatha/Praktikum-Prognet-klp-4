@@ -59,7 +59,7 @@
 
                                         <div class="col-md-6 col-12 mb-20">
                                             <label>Courier*</label>
-                                            <select class="js-example-basic-single" id="packet">
+                                            <select class="js-example-basic-single form-control" id="packet">
                                                 <option value="" disabled selected>Choose Packet Shipping</option>
                                                 @foreach($ongkir[0]['costs'] as $ship)
                                                 <option value="{{$ship['cost'][0]['value']}}">{{ $ship['service'] }} | {{ $ship['cost'][0]['etd'] }} Days | Rp. {{ number_format($ship['cost'][0]['value'])}} </option>

@@ -17,7 +17,7 @@
                             <!--=======  big image slider single item  =======-->
                                         
                             <div class="big-image-slider-single-item">
-                                <img src="{{asset('assets/img/products/big1-1.jpg')}}" class="img-fluid" alt="">
+                                <img src="{{asset('images/'.$products->image_name)}}" class="img-fluid" alt="">
                             </div>
                             
                             <!--=======  End of big image slider single item  =======-->

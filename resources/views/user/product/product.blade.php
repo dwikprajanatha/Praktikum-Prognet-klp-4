@@ -61,7 +61,7 @@
                         
                             <div class="single-slider-product single-slider-product--list-view list-view-product">
                                 <div class="single-slider-product__image single-slider-product--list-view__image">
-                                    <a href="index.php?page=productdetail">
+                                    <a href="{{route('detail.product',$d->product_id)}}">
                                         <img src="{{asset('images/'. $d->image_name)}}" class="img-fluid" alt="">
                                     </a>
                                     @if(isset($discount))
@@ -95,7 +95,7 @@
                                     <div class="single-slider-product--list-view__content__actions">
                                         <div class="availability mb-10">
                                             <span class="availability-title">Availabe:</span>
-                                            <span class="availability-value">Out of stock</span>
+                                            <span class="availability-value">{{$d->stock}}</span>
                                         </div>
 
                                         @if(isset($disc_prices))

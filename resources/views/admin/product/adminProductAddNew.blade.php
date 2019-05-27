@@ -15,7 +15,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Form Elements</h3>
+                <h3>Add New Products</h3>
             </div>
 
 
